@@ -1,0 +1,6 @@
+category,mpn,manufacturer,resistance,capacitance,rated_voltage_dc,temperature_coefficient_code,case,lcsc,jlc_class,datasheet
+resistor,0603WAF330JT5E,UNI-ROYAL,33,,,,0603,C23140,basic,https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf?productCode=C23140
+resistor,0603WAF1002T5E,UNI-ROYAL,10000,,,,0603,C25804,basic,https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf?productCode=C25804
+resistor,0603WAF2002T5E,UNI-ROYAL,20000,,,,0603,C4184,basic,https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf?productCode=C4184
+capacitor,CC0603KRX7R9BB104,YAGEO,,100e-9,50,X7R,0603,C14663,basic,https://datasheet.lcsc.com/datasheet/pdf/23ccee80ee542e7cf156a772bb589942.pdf?productCode=C14663
+capacitor,CL10A106MA8NRNC,Samsung Electro-Mechanics,,10e-6,25,X5R,0603,C96446,basic,https://datasheet.lcsc.com/datasheet/pdf/24d8eb2e4bec5cc4dad0f294a4a8fd8e.pdf?productCode=C96446

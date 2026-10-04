@@ -1,0 +1,25 @@
+# pyproject.toml
+
+[build-system]
+requires = [
+  "hatchling>=1.27.0,<2.0",
+  "hatch-vcs>=0.4.0,<0.5.0"
+]
+build-backend = "hatchling.build"
+
+[project]
+name = "pappalapap"
+version = "0.1"
+dependencies = [
+  "jitx>=4.4.0,<5",
+  "jitxlib-standard>=4.4.0,<5",
+  "jitxlib-parts>=2.0.0a6,<3"
+]
+requires-python = ">=3.12"
+
+# Passive parts chain (jitxlib-parts 2.x). JLCPCB Basic parts only, verified
+# against the LCSC/JLCPCB catalogue with parts2jitx-lcsc on 2026-10-03.
+[tool.jitx.parts]
+chain = ["csv:parts/jlc-basic-passives.csv"]
+lock = "parts/parts.lock.json"
+lock-mode = "read-write"

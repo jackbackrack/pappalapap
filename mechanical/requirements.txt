@@ -1,0 +1,9 @@
+numpy
+scipy
+matplotlib
+autograd
+trimesh
+manifold3d
+shapely
+mapbox_earcut
+scikit-image

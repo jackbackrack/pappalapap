@@ -1,0 +1,6 @@
+{
+  "operations": [
+    {"operation":"place","place":{"placements":[{"id":"3X2eRxSK38JoniVdGPfREf","pose":{"center":{"x":38.55,"y":-24.95},"angle":0},"side":"top","anchor":null}]}}
+  ],
+  "generation": "ggnSKuXKVVM2GewM4aSMG"
+}

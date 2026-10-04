@@ -1,0 +1,266 @@
+{
+ "schema_version": 1,
+ "digest_version": 1,
+ "chains": {
+  "main": {
+   "digest": "5df234a962045ef8eff41050d6e76719ef4926a79de4d00d18004ebd2f2142db",
+   "providers": [
+    "csv:jlc-basic-passives.csv"
+   ]
+  }
+ },
+ "entries": [
+  {
+   "digest": "21ab73542cf2e6e3239a97ddc1527021e48f48e4823f242203029ce6e83fb9c1",
+   "chain": "main",
+   "lock_scope": "",
+   "query": "capacitor(capacitance=10 microfarad, case=0603, jlc_class=basic, rated_voltage_dc=>=10 volt, temperature_coefficient_code=OneOf(X7R, X5R))",
+   "filters": {
+    "capacitance": [
+     "Exactly",
+     [
+      "q",
+      "10 microfarad"
+     ]
+    ],
+    "case": [
+     "Exactly",
+     "0603"
+    ],
+    "jlc_class": [
+     "Exactly",
+     "basic"
+    ],
+    "rated_voltage_dc": [
+     "Range",
+     [
+      "q",
+      "10 volt"
+     ],
+     null
+    ],
+    "temperature_coefficient_code": [
+     "OneOf",
+     [
+      "X7R",
+      "X5R"
+     ]
+    ]
+   },
+   "provider": "csv:jlc-basic-passives.csv",
+   "identity": {
+    "mpn": "CL10A106MA8NRNC",
+    "manufacturer": "Samsung Electro-Mechanics",
+    "category": "capacitor",
+    "provider": "csv:jlc-basic-passives.csv",
+    "attributes": {
+     "capacitance": [
+      "q",
+      "10.0 microfarad"
+     ],
+     "case": "0603",
+     "jlc_class": "basic",
+     "lcsc": "C96446",
+     "rated_voltage_dc": [
+      "q",
+      "25.0 volt"
+     ],
+     "temperature_coefficient_code": "X5R"
+    },
+    "provider_ref": "CL10A106MA8NRNC"
+   },
+   "payload": {
+    "v": 1,
+    "datasheet": "https://datasheet.lcsc.com/datasheet/pdf/24d8eb2e4bec5cc4dad0f294a4a8fd8e.pdf?productCode=C96446"
+   }
+  },
+  {
+   "digest": "cd0aca0da9e58458297251fb9d3f098b82a9769c2366cd287815f40c5bc36c7b",
+   "chain": "main",
+   "lock_scope": "",
+   "query": "resistor(case=0603, jlc_class=basic, resistance=10 kiloohm)",
+   "filters": {
+    "case": [
+     "Exactly",
+     "0603"
+    ],
+    "jlc_class": [
+     "Exactly",
+     "basic"
+    ],
+    "resistance": [
+     "Exactly",
+     [
+      "q",
+      "10 kiloohm"
+     ]
+    ]
+   },
+   "provider": "csv:jlc-basic-passives.csv",
+   "identity": {
+    "mpn": "0603WAF1002T5E",
+    "manufacturer": "UNI-ROYAL",
+    "category": "resistor",
+    "provider": "csv:jlc-basic-passives.csv",
+    "attributes": {
+     "case": "0603",
+     "jlc_class": "basic",
+     "lcsc": "C25804",
+     "resistance": [
+      "q",
+      "10.0 kiloohm"
+     ]
+    },
+    "provider_ref": "0603WAF1002T5E"
+   },
+   "payload": {
+    "v": 1,
+    "datasheet": "https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf?productCode=C25804"
+   }
+  },
+  {
+   "digest": "da0cf02e873abea755edea3635362349a5a97f394a6a06c31c896eed39ea430b",
+   "chain": "main",
+   "lock_scope": "",
+   "query": "resistor(case=0603, jlc_class=basic, resistance=20 kiloohm)",
+   "filters": {
+    "case": [
+     "Exactly",
+     "0603"
+    ],
+    "jlc_class": [
+     "Exactly",
+     "basic"
+    ],
+    "resistance": [
+     "Exactly",
+     [
+      "q",
+      "20 kiloohm"
+     ]
+    ]
+   },
+   "provider": "csv:jlc-basic-passives.csv",
+   "identity": {
+    "mpn": "0603WAF2002T5E",
+    "manufacturer": "UNI-ROYAL",
+    "category": "resistor",
+    "provider": "csv:jlc-basic-passives.csv",
+    "attributes": {
+     "case": "0603",
+     "jlc_class": "basic",
+     "lcsc": "C4184",
+     "resistance": [
+      "q",
+      "20.0 kiloohm"
+     ]
+    },
+    "provider_ref": "0603WAF2002T5E"
+   },
+   "payload": {
+    "v": 1,
+    "datasheet": "https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf?productCode=C4184"
+   }
+  },
+  {
+   "digest": "c640fa2838e41a5dd2eaca9b03038563b031c302338df32fdb4eb0c1125e99ca",
+   "chain": "main",
+   "lock_scope": "",
+   "query": "resistor(case=0603, jlc_class=basic, resistance=33 ohm)",
+   "filters": {
+    "case": [
+     "Exactly",
+     "0603"
+    ],
+    "jlc_class": [
+     "Exactly",
+     "basic"
+    ],
+    "resistance": [
+     "Exactly",
+     [
+      "q",
+      "33 ohm"
+     ]
+    ]
+   },
+   "provider": "csv:jlc-basic-passives.csv",
+   "identity": {
+    "mpn": "0603WAF330JT5E",
+    "manufacturer": "UNI-ROYAL",
+    "category": "resistor",
+    "provider": "csv:jlc-basic-passives.csv",
+    "attributes": {
+     "case": "0603",
+     "jlc_class": "basic",
+     "lcsc": "C23140",
+     "resistance": [
+      "q",
+      "33.0 ohm"
+     ]
+    },
+    "provider_ref": "0603WAF330JT5E"
+   },
+   "payload": {
+    "v": 1,
+    "datasheet": "https://datasheet.lcsc.com/datasheet/pdf/0a975aaa49b7c97f38a963127be4a823.pdf?productCode=C23140"
+   }
+  },
+  {
+   "digest": "520c3ca1a992daa0d6e25303b53fff16cbb4e6795502d8ac20f82e93663da63a",
+   "chain": "main",
+   "lock_scope": "",
+   "query": "capacitor(capacitance=100 nanofarad, case=0603, jlc_class=basic, temperature_coefficient_code=OneOf(X7R, X5R))",
+   "filters": {
+    "capacitance": [
+     "Exactly",
+     [
+      "q",
+      "100 nanofarad"
+     ]
+    ],
+    "case": [
+     "Exactly",
+     "0603"
+    ],
+    "jlc_class": [
+     "Exactly",
+     "basic"
+    ],
+    "temperature_coefficient_code": [
+     "OneOf",
+     [
+      "X7R",
+      "X5R"
+     ]
+    ]
+   },
+   "provider": "csv:jlc-basic-passives.csv",
+   "identity": {
+    "mpn": "CC0603KRX7R9BB104",
+    "manufacturer": "YAGEO",
+    "category": "capacitor",
+    "provider": "csv:jlc-basic-passives.csv",
+    "attributes": {
+     "capacitance": [
+      "q",
+      "100.0 nanofarad"
+     ],
+     "case": "0603",
+     "jlc_class": "basic",
+     "lcsc": "C14663",
+     "rated_voltage_dc": [
+      "q",
+      "50.0 volt"
+     ],
+     "temperature_coefficient_code": "X7R"
+    },
+    "provider_ref": "CC0603KRX7R9BB104"
+   },
+   "payload": {
+    "v": 1,
+    "datasheet": "https://datasheet.lcsc.com/datasheet/pdf/23ccee80ee542e7cf156a772bb589942.pdf?productCode=C14663"
+   }
+  }
+ ]
+}

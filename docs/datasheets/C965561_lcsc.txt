@@ -1,0 +1,25 @@
+Part:          WS2816C-2121 (Worldsemi)
+LCSC:          C965561
+Package:       SMD,2.2x2.2mm
+Stock:         4,025
+Description:   SMD,2.2x2.2mm LED Addressable, Specialty 
+Price:         $0.1575 (qty 0+)
+Datasheet:     https://datasheet.lcsc.com/datasheet/pdf/0a49b02030eefff1ce6215b403f19c6e.pdf?productCode=C965561
+Lookup:        0.70s
+
+Part:          WS2816C-2121 (Worldsemi)
+LCSC:          C965561
+Package:       SMD,2.2x2.2mm
+Stock:         4,025
+Description:   SMD,2.2x2.2mm LED Addressable, Specialty 
+Price:         $0.1575 (qty 0+)
+Datasheet:     https://datasheet.lcsc.com/datasheet/pdf/0a49b02030eefff1ce6215b403f19c6e.pdf?productCode=C965561
+Lookup:        0.29s
+
+Pinout:        6 pins (0.30s)
+       1  BI
+       2  DI
+       3  VDD
+       4  DO
+       5  BO
+       6  GND
