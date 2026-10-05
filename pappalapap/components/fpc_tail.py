@@ -186,6 +186,8 @@ class FpcTail16(Component):
 
     manufacturer = "n/a (flex tail fingers)"
     mpn = "FPC-TAIL-16P-1.0"
+    in_bom = False  # board copper (gold fingers), not a bought part
+    soldered = False  # mates with the ZIF; nothing is placed or soldered here
     reference_designator_prefix = "J"
     datasheet = "docs/datasheets/XFCN_F1002-B-12-20T-R_C481250.pdf"
     mating_connector: ClassVar[str] = "XFCN F1002-B-16-20T-R (LCSC C481251)"

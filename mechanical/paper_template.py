@@ -23,6 +23,8 @@ from matplotlib.patches import Rectangle  # noqa: E402
 
 from geometry import (  # noqa: E402
     BOTTOM_COLUMNS,
+    JOINT_X,
+    OVERLAP,
     HEIGHT,
     LAP,
     LED_SIZE,
@@ -63,8 +65,11 @@ def lit(face: str, col: int, row: int) -> bool:
 
 
 PAGE_SIZES = {"letter": (279.4, 215.9), "a4": (297.0, 210.0)}
-SPLIT = LENGTH / 2  # 245
-TAB = 8.0  # glue tab on the first half
+# Pages follow the flex segments: page 1 is segment A, page 2 is segment B. The
+# 5 mm splice overlap is page 1's glue tab, and page 2 lies on top of it, as
+# segment B does on segment A.
+SPLIT = JOINT_X - OVERLAP / 2
+TAB = OVERLAP
 
 
 def draw_page(pdf, page_w, page_h, x0, x1, face, title, glue_tab_right, cut_left):
@@ -105,7 +110,7 @@ def draw_page(pdf, page_w, page_h, x0, x1, face, title, glue_tab_right, cut_left
     if glue_tab_right:
         rect(x1, 0, TAB, HEIGHT, facecolor="#dde8ff", edgecolor="#335", lw=0.4, ls="--")
         ax.text(
-            (X(x1) + X(x1 + TAB)) / 2, oy + HEIGHT / 2, "GLUE TAB\nunder next half",
+            (X(x1) + X(x1 + TAB)) / 2, oy + HEIGHT / 2, "SPLICE",
             rotation=90, ha="center", va="center", fontsize=5,
         )
 
@@ -180,9 +185,9 @@ def main() -> None:
     for name, (pw, ph) in PAGE_SIZES.items():
         path = OUT / f"paper_template_{name}.pdf"
         with PdfPages(path) as pdf:
-            draw_page(pdf, pw, ph, 0, SPLIT, "top", "FRONT (top face) 1/2: end A",
+            draw_page(pdf, pw, ph, 0, SPLIT, "top", "FRONT (top face), segment A: end A",
                       glue_tab_right=True, cut_left=False)
-            draw_page(pdf, pw, ph, SPLIT, LENGTH, "top", "FRONT (top face) 2/2: end B",
+            draw_page(pdf, pw, ph, SPLIT, LENGTH, "top", "FRONT (top face), segment B: end B",
                       glue_tab_right=False, cut_left=True)
             # Back sheet, seen from behind. Its first half covers end B.
             draw_page(pdf, pw, ph, SPLIT, LENGTH, "bottom",

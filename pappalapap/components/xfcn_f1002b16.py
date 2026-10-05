@@ -68,6 +68,7 @@ from jitx.net import Port
 from jitx.sample import SampleDesign
 from jitx.shapes.composites import rectangle
 from jitx.shapes.primitive import Circle, Polyline
+from jitxlib.jlcpcb import LCSCPart
 from jitxlib.landpatterns.pads import SMDPad
 from jitxlib.symbols.box import BoxSymbol, Column, PinGroup, Row
 
@@ -146,7 +147,7 @@ class XFCN_F1002B16(Component):
 
     manufacturer = "XFCN"
     mpn = "F1002-B-16-20T-R"
-    lcsc: ClassVar[str] = "C481251"
+    lcsc = LCSCPart("C481251")  # read by the JLCPCB exporter (jitxlib.jlcpcb)
     datasheet = (
         "https://datasheet.lcsc.com/datasheet/pdf/"
         "fbb3bfadf4d81cea0a7473fb34bffb99.pdf?productCode=C481251"

@@ -26,14 +26,13 @@ polarized outline draws the body circle, a "+" beside the anode and a
 thickened arc. Courtyard from the 10.5 mm maximum body.
 """
 
-from typing import ClassVar
-
 from jitx.circuit import Circuit
 from jitx.component import Component
 from jitx.landpattern import PadMapping
 from jitx.net import Port
 from jitx.sample import SampleDesign
 from jitx.toleranced import Toleranced
+from jitxlib.jlcpcb import LCSCPart
 from jitxlib.landpatterns.ipc import DensityLevel
 from jitxlib.landpatterns.leads import THLead
 from jitxlib.landpatterns.package import CylinderPackage
@@ -46,7 +45,7 @@ class CX1000uF16V(Component):
 
     manufacturer = "Chengx"
     mpn = "KM108M016G13RR0VH2FP0"
-    lcsc: ClassVar[str] = "C439782"
+    lcsc = LCSCPart("C439782")  # read by the JLCPCB exporter (jitxlib.jlcpcb)
     datasheet = (
         "https://datasheet.lcsc.com/datasheet/pdf/"
         "c4fd22258d6f7116b203df2d4ecd7eec.pdf?productCode=C439782"

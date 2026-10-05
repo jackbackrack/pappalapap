@@ -18,6 +18,11 @@ comes straight in from -y), XIAO USB-C flush with the right edge, screw
 terminal wire entry on the left edge. The 1000 uF can sits 13 mm above the
 ZIF's entry face, clear of the flip lid.
 
+Bulk storage: this board keeps the 1000 uF can (``BulkCan``). It is
+superseded by the column board (which switched to a ``MlccBank`` of four
+100 uF 1206 MLCCs on 2026-10-05) and is only kept building, so it was not
+re-laid out.
+
 Mounting: 4 x M2.5 clearance holes, NON-plated, 2.7 mm, 3.5 mm in from each
 side, with a 6.0 mm copper/via/route keepout on both layers for the screw head
 (M2.5 pan head <= 5.0 mm). NPTH because the base it screws into is not a
@@ -69,6 +74,7 @@ from jitx.shapes import Shape
 from jitx.shapes.primitive import Circle, Text
 from jitx.shapes.shapely import ShapelyGeometry
 from jitx.transform import Transform
+from jitxlib.parts import Capacitor, Resistor
 from jitxlib.symbols.net_symbols import GroundSymbol, PowerSymbol
 from shapely.geometry.base import BaseGeometry
 
@@ -76,11 +82,13 @@ from ..circuits.interface import (
     JLC_BASIC_CAPACITOR,
     JLC_BASIC_RESISTOR,
     At,
+    BulkCan,
     InterfacePlacement,
     XiaoInterface,
     XiaoSupplyTag,
 )
 from ..circuits.led_strip import GroundTag, PowerTag
+from ..components.cx_1000uf16v import CX1000uF16V
 from ..components.kefa_kf301_2p import KF301_2P, PIN_TO_FRONT
 from ..components.littelfuse_0451_6a3 import Fuse451_6A3
 from ..components.xfcn_f1002b16 import XFCN_F1002B16
@@ -127,7 +135,7 @@ def interface_board_placement() -> InterfacePlacement:
         gate_r=At(-2.9, 13.2, 90),
         # TVS lying along x above the XIAO; K (local +y) toward the FET.
         tvs=At(5.7, 13.3, 90),
-        bulk=At(-12.15, -1.6),
+        bulk=(At(-12.15, -1.6),),
         # Schottky upright; rotate 180 puts K (local +y) at the bottom, toward
         # the XIAO's 5V pin, and A at the top, inside the VLED pour.
         schottky=At(2.0, 0.5, 180),
@@ -267,8 +275,41 @@ def all_pad_footprints(
     ]
 
 
+def two_pin_pad_footprints(
+    component: Capacitor | Resistor, frame: Transform | None
+) -> tuple[shapely.Polygon, shapely.Polygon]:
+    """Board-frame pads of a parts-chain two-pin passive, as (p1, p2).
+
+    Such a part has no explicit pad mapping, so JITX's default applies: ports
+    in declaration order onto pads in landpattern order (``jitx.component``).
+    Reading the landpattern resolves the part (its batch flushes on demand).
+    """
+    ports = list(extract(component, Port))
+    assert ports == [component.p1, component.p2], "two-pin port order"
+    first, second = (
+        pad_outline(pad, component, frame)
+        for pad in extract(component.landpattern, Pad)
+    )
+    return first, second
+
+
+def bulk_vled_pads(
+    iface: XiaoInterface, frame: Transform | None
+) -> list[shapely.Polygon]:
+    """Board-frame VLED pad of every bulk capacitor (can +, MLCC p1)."""
+    pads: list[shapely.Polygon] = []
+    for cap in iface.bulk:
+        if isinstance(cap, CX1000uF16V):
+            pads += pad_footprints(cap, [cap.pos], frame)
+        else:
+            pads.append(two_pin_pad_footprints(cap, frame)[0])
+    return pads
+
+
 def pad_outline(
-    pad: Pad, component: MappedComponent | Fuse451_6A3, frame: Transform | None
+    pad: Pad,
+    component: MappedComponent | Fuse451_6A3 | Capacitor | Resistor,
+    frame: Transform | None,
 ) -> shapely.Polygon:
     """Board-frame copper outline of one pad of a placed component."""
     assert isinstance(pad.shape, Shape)
@@ -320,7 +361,7 @@ class InterfaceLayout(Circuit):
 
     def __init__(self) -> None:
         self.iface = XiaoInterface(
-            XiaoESP32S3Socket, KF301_2P, interface_board_placement()
+            XiaoESP32S3Socket, KF301_2P, BulkCan(), interface_board_placement()
         ).at(0.0, 0.0)
         iface = self.iface
         frame = iface.transform
@@ -374,7 +415,7 @@ class InterfaceLayout(Circuit):
         vled_pads = (
             pad_footprints(iface.fet, [iface.fet.S], frame)
             + pad_footprints(iface.tvs, [iface.tvs.K], frame)
-            + pad_footprints(iface.bulk, [iface.bulk.pos], frame)
+            + bulk_vled_pads(iface, frame)
             + pad_footprints(iface.schottky, [iface.schottky.A], frame)
             + pad_footprints(iface.buffer, [iface.buffer.VCC], frame)
             + pad_footprints(iface.zif, iface.zif_vled(), frame)
@@ -435,7 +476,7 @@ class InterfaceLayout(Circuit):
 
         # --- High-current pads --------------------------------------------------
         HighCurrentPadTag().assign(
-            iface.power_in, iface.fuse, iface.fet, iface.tvs, iface.bulk
+            iface.power_in, iface.fuse, iface.fet, iface.tvs, *iface.bulk
         )
 
         # --- Silkscreen -------------------------------------------------------------

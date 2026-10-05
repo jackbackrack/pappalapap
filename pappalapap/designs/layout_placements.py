@@ -107,7 +107,12 @@ def parse_refpath(text: str) -> RefPath:
     return RefPath(steps)
 
 
-def layout_placements(filename: str | Path) -> None:
+def layout_placements(
+    filename: str | Path,
+    *,
+    output: str | Path | None = None,
+    apply_board_shape: bool = True,
+) -> None:
     """Apply placements from a layout file, and write the current placements.
 
     If ``filename`` exists, each component it lists is placed in the current
@@ -118,16 +123,25 @@ def layout_placements(filename: str | Path) -> None:
 
     Args:
         filename: Path to the layout JSON file.
+        output: Where to write the current placements instead of
+            ``<stem>-input<suffix>`` (a design that reads another design's
+            layout file writes its own snapshot).
+        apply_board_shape: False ignores the file's board shape (a design
+            whose board is not the one the file was written for).
     """
     path = Path(filename)
     design = current.design
-    _write_layout(path.with_name(f"{path.stem}-input{path.suffix}"))
+    _write_layout(
+        Path(output)
+        if output is not None
+        else path.with_name(f"{path.stem}-input{path.suffix}")
+    )
     if not path.exists():
         return
     with open(path) as file:
         data = json.load(file)
     board = data.get("board_shape")
-    if board is not None:
+    if board is not None and apply_board_shape:
         design.board.shape = _parse_board(board)
     for entry in data.get("components", ()):
         if entry.get("fixed"):

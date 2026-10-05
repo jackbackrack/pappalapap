@@ -13,8 +13,11 @@ GND). A mirrored mating swaps 5 V and GND at up to 5 A.
 
 Inputs, all read from the owning objects (no restated coordinates):
 
-- Flex side: ``FlexStrip`` from ``pappalapap.designs.flex_strip`` is built and
-  its placed ``FpcTail16`` (``FlexStrip.tail``) is used as is: its placement
+- Flex side, every tail (``TAILS``): segment A of the two-segment strip
+  (``FlexStrip(TWO_SEGMENT, segment A)``, the circuit of ``FlexSegmentA``)
+  and the one-board strip (``FlexStrip(ONE_SEGMENT)``, the circuit of
+  ``FlexOneSegment``), from ``pappalapap.designs.flex_strip``. Each is built
+  and its placed ``FpcTail16`` (``FlexStrip.tail``) is used as is: its placement
   (Side.Bottom, i.e. x-mirrored about the tail centreline) and each finger's
   pad, through ``flex_strip.pad_footprints``, give every finger's centre in the
   flex board's TOP-VIEW frame.
@@ -86,6 +89,7 @@ from pappalapap.designs.flex_strip import FlexStrip, pad_footprints
 from pappalapap.designs.interface_board import InterfaceLayout, compose
 from pappalapap.substrate import JLCFlex2L
 from pappalapap.substrate_rigid import JLC2L16
+from pappalapap.variants import ONE_SEGMENT, TWO_SEGMENT, StripVariant
 
 LATERAL_TOLERANCE = 0.05
 """Finger-to-contact centre offset allowed (mm): the XFCN pitch tolerance."""
@@ -109,6 +113,23 @@ class BoardCase:
 BOARDS = [
     BoardCase("interface_board", InterfaceLayout, (0.0, 1.0)),
     BoardCase("column_board", ColumnLayout, (0.0, -1.0)),
+]
+
+
+@dataclass(frozen=True)
+class TailCase:
+    """One flex board that carries the tail."""
+
+    name: str
+    """Display name only."""
+    variant: StripVariant
+    segment: range | None
+    """Column range of the board holding end A (None: the whole strip)."""
+
+
+TAILS = [
+    TailCase("two-segment A", TWO_SEGMENT, TWO_SEGMENT.segments[0]),
+    TailCase("one-segment", ONE_SEGMENT, None),
 ]
 
 
@@ -153,9 +174,15 @@ def mating_transform(tail_placement: Placement) -> Transform:
     )
 
 
+def tail_of(flex: FlexStrip) -> FpcTail16:
+    """The flex's tail (segment A has one)."""
+    assert flex.tail is not None, "this flex segment has no tail"
+    return flex.tail
+
+
 def tail_nets(flex: FlexStrip) -> list[tuple[Port, Net]]:
     """Each tail finger port with its flex net (VDD, DRET, DIN or GND)."""
-    tail = flex.tail
+    tail = tail_of(flex)
     return [
         *[(p, flex.vdd) for p in tail.VDD],
         (tail.DRET, flex.dret),
@@ -175,7 +202,7 @@ def finger_number(tail: FpcTail16, port: Port) -> int:
 
 def landings(flex: FlexStrip, iface: XiaoInterface) -> list[FingerLanding]:
     """Land every tail finger on the ZIF."""
-    tail = flex.tail
+    tail = tail_of(flex)
     assert isinstance(tail.transform, Placement)
     mate = mating_transform(tail.transform)
     result = []
@@ -235,14 +262,16 @@ def zif_entry(layout: InterfaceLayout | ColumnLayout) -> ZifEntry:
 class ZifMatingTest(TestCase):
     """Tail finger k lands on ZIF contact k, with matching nets, on every board."""
 
-    flex: FlexStrip
+    flexes: list[tuple[TailCase, FlexStrip]]
     layouts: list[tuple[BoardCase, InterfaceLayout | ColumnLayout]]
 
     @classmethod
     def setUpClass(cls) -> None:
         super().setUpClass()
         with SubstrateContext(JLCFlex2L()):
-            cls.flex = FlexStrip()
+            cls.flexes = [
+                (tail, FlexStrip(tail.variant, tail.segment)) for tail in TAILS
+            ]
         # EventContext: the jitxlib.parts passives register for the design's
         # Initialized event; outside a design they simply stay unresolved,
         # which this check never needs (it reads ports, nets and the
@@ -250,9 +279,10 @@ class ZifMatingTest(TestCase):
         with SubstrateContext(JLC2L16()), EventContext():
             cls.layouts = [(case, case.layout()) for case in BOARDS]
 
-    def expected_net(self, iface: XiaoInterface, landing: FingerLanding) -> Net:
+    def expected_net(
+        self, flex: FlexStrip, iface: XiaoInterface, landing: FingerLanding
+    ) -> Net:
         """Interface net the ZIF contact must carry, given the tail's net."""
-        flex = self.flex
         if landing.flex_net is flex.vdd:
             return iface.VLED
         if landing.flex_net is flex.dret:
@@ -262,9 +292,8 @@ class ZifMatingTest(TestCase):
         assert landing.flex_net is flex.gnd
         return iface.GND
 
-    def flex_label(self, landing: FingerLanding) -> str:
+    def flex_label(self, flex: FlexStrip, landing: FingerLanding) -> str:
         """Display name of the finger's flex net (the flex nets are unnamed)."""
-        flex = self.flex
         if landing.flex_net is flex.vdd:
             return "VDD"
         if landing.flex_net is flex.dret:
@@ -274,27 +303,30 @@ class ZifMatingTest(TestCase):
         return "GND"
 
     def test_mating(self) -> None:
-        for case, layout in self.layouts:
-            with self.subTest(board=case.name):
-                self.check_mating(case, layout.iface)
+        for tail, flex in self.flexes:
+            for case, layout in self.layouts:
+                with self.subTest(tail=tail.name, board=case.name):
+                    self.check_mating(tail, flex, case, layout.iface)
 
-    def check_mating(self, case: BoardCase, iface: XiaoInterface) -> None:
-        found = landings(self.flex, iface)
+    def check_mating(
+        self, tail: TailCase, flex: FlexStrip, case: BoardCase, iface: XiaoInterface
+    ) -> None:
+        found = landings(flex, iface)
         self.assertEqual(
             sorted(f.finger for f in found), list(range(1, FpcTail16.NUM_FINGERS + 1))
         )
         print()
-        print(f" [{case.name}]")
+        print(f" [{tail.name} tail -> {case.name}]")
         print(" finger  flex net  ->  contact   dx (mm)   y span (mm)    ZIF net")
         for f in sorted(found, key=lambda f: f.finger):
             print(
-                f"   {f.finger:2d}    {self.flex_label(f):5s}  ->    {f.contact:2d}"
+                f"   {f.finger:2d}    {self.flex_label(flex, f):5s}  ->    {f.contact:2d}"
                 f"     {f.dx:+.3f}   {f.y_span[0]:+.2f}..{f.y_span[1]:+.2f}"
-                f"   {self.expected_net(iface, f).name}"
+                f"   {self.expected_net(flex, iface, f).name}"
             )
         print(f" contact line y = {XFCN_F1002B16.CONTACT_LINE_Y:+.2f}")
         for f in found:
-            with self.subTest(board=case.name, finger=f.finger):
+            with self.subTest(tail=tail.name, board=case.name, finger=f.finger):
                 self.assertEqual(f.contact, f.finger, "finger on the wrong contact")
                 self.assertLessEqual(abs(f.dx), LATERAL_TOLERANCE)
                 y0, y1 = f.y_span
@@ -303,7 +335,7 @@ class ZifMatingTest(TestCase):
                     "finger does not cross the contact line",
                 )
                 self.assertTrue(
-                    on_net(f.zif_port, self.expected_net(iface, f)),
+                    on_net(f.zif_port, self.expected_net(flex, iface, f)),
                     f"ZIF contact {f.contact} not on the matching net",
                 )
 
@@ -332,14 +364,18 @@ class ZifMatingTest(TestCase):
 
     def test_mirror_would_be_caught(self) -> None:
         """Sanity: a mirrored mating (fingers facing up) puts finger 1 on 16."""
-        tail = self.flex.tail
-        assert isinstance(tail.transform, Placement)
-        mirror = Transform((0.0, 0.0), 0.0, (-1.0, 1.0)) * mating_transform(
-            tail.transform
-        )
-        (footprint,) = list(pad_footprints(tail, tail.VDD[0]))
-        cx = shapely.affinity.affine_transform(footprint, affine(mirror)).centroid.x
-        self.assertAlmostEqual(cx, XFCN_F1002B16.pin_x(16), places=6)
+        for case, flex in self.flexes:
+            with self.subTest(tail=case.name):
+                tail = tail_of(flex)
+                assert isinstance(tail.transform, Placement)
+                mirror = Transform((0.0, 0.0), 0.0, (-1.0, 1.0)) * mating_transform(
+                    tail.transform
+                )
+                (footprint,) = list(pad_footprints(tail, tail.VDD[0]))
+                mated = shapely.affinity.affine_transform(footprint, affine(mirror))
+                self.assertAlmostEqual(
+                    mated.centroid.x, XFCN_F1002B16.pin_x(16), places=6
+                )
 
 
 if __name__ == "__main__":

@@ -52,11 +52,13 @@ USB_Y = (2.8, 11.8)  # USB-C span along the board (board frame, origin at centre
 USB_DEPTH = 5.0  # USB-C body above the board surface
 XIAO_Y = 7.3
 # Smallest circle around the board's cross-section (component courtyards and
-# heights from design-report-...ColumnBoard.json; the 1000 uF can at 14.5 mm and
-# the board edges in their slots set it): radius 14.25, centred on the board's
-# centreline, 5.45 mm in front of the component surface.
-BOARD_CIRCLE_R = 14.25
-BOARD_CIRCLE_DEPTH = 5.45
+# heights from design-report-...ColumnBoard.json; since 2026-10-05 the bulk is
+# four 1206 MLCCs, so the XIAO stack (8.5 mm with microSD) and the board edges in
+# their slots set it): radius 12.80, centred on the board's centreline, 1.95 mm
+# in front of the component surface.
+FRONT_TALLEST = 8.5  # XIAO ESP32S3 Sense stack (no camera) with a microSD card
+BOARD_CIRCLE_R = 12.80
+BOARD_CIRCLE_DEPTH = 1.95
 
 # --- Column -----------------------------------------------------------------
 CLEAR = 0.25
@@ -329,7 +331,7 @@ def main() -> None:
 
     # Fit check: board slab and component envelope must sit inside the cavity.
     board = box(xt - BOARD_W / 2, xt + BOARD_W / 2, surf_y, back_y, board_bottom, board_top)
-    envelope = box(xt - rib_x0, xt + rib_x0, surf_y - 14.5, surf_y, board_bottom + 30, board_bottom + 46)
+    envelope = box(xt - 10.7, xt + 11.0, surf_y - FRONT_TALLEST, surf_y, board_bottom + 30, board_bottom + 46)
     print(f"interference: board vs column {(board ^ column).volume():.3f} mm3, "
           f"tall-part envelope vs column {(envelope ^ column).volume():.3f} mm3, "
           f"envelope vs cover {(envelope ^ cover).volume():.3f} mm3, cover vs column {(cover ^ column).volume():.3f} mm3")
@@ -340,11 +342,9 @@ def main() -> None:
     zr = (col_bottom - 1, board_top)
     sweep = (
         box(xt - BOARD_W / 2, xt + BOARD_W / 2, surf_y, back_y, *zr)
-        + box(xt - 11.0, xt + 3.5, surf_y - 14.5, surf_y, *zr)  # 1000 uF can
-        + box(xt - 10.73, xt + 11.0, surf_y - 8.1, surf_y, *zr)  # XIAO Sense stack (USB end is in the opening)
+        + box(xt - 10.73, xt + 11.0, surf_y - FRONT_TALLEST, surf_y, *zr)  # XIAO Sense stack (+ microSD; USB end is in the opening)
         + box(xt - 11.0, xt + 11.0, surf_y - 3.0, surf_y, *zr)  # other parts
-        + box(xt - 11.0, xt + 3.5, back_y, back_y + 2.0, *zr)  # can leads behind
-        + box(xt - 7.25, xt + 7.25, back_y, back_y + 2.0, *zr)  # wire joints behind
+        + box(xt - 7.25, xt + 7.25, back_y, back_y + 1.5, *zr)  # wire joints behind
     )
     usb_free = box(xt + rib_x0, xt + r_out + 2, surf_y - USB_DEPTH - 2.5, back_y, *usb_z)
     print(f"pusher vs column (bosses, ribs): {(pusher_placed ^ column).volume():.3f} mm3")

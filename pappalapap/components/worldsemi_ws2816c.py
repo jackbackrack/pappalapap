@@ -21,11 +21,11 @@ The EasyEDA footprint for C965561 was compared, not used: it puts the pad
 columns at +/-0.94 mm (the datasheet arithmetic gives 0.945) and otherwise
 matches pad size, row pitch, and numbering.
 
-Not modelled (no JITX field): LCSC part number is kept as the ``lcsc`` class
-constant only; electrical ratings (VDD 3.7-5.5 V) live in the datasheet.
+LCSC part number: ``lcsc = LCSCPart(...)`` (jitxlib.jlcpcb, read by the JLCPCB
+exporter); electrical ratings (VDD 3.7-5.5 V) live in the datasheet.
 """
 
-from typing import ClassVar
+from enum import Enum
 
 from jitx.circuit import Circuit
 from jitx.component import Component
@@ -35,6 +35,7 @@ from jitx.net import Port
 from jitx.sample import SampleDesign
 from jitx.shapes.composites import rectangle
 from jitx.shapes.primitive import Circle, Polyline
+from jitxlib.jlcpcb import LCSCPart
 from jitxlib.landpatterns.pads import SMDPad
 from jitxlib.symbols.box import BoxSymbol, Column, PinGroup, Row
 
@@ -95,12 +96,21 @@ class WS2816CLandpattern(Landpattern):
         self.courtyard = Courtyard(rectangle(2 * extent_x, 2 * extent_y))
 
 
+class DataPath(Enum):
+    """The WS2816C's two daisy-chain data paths (datasheet p.6 application
+    circuit): primary DI -> DO and backup BI -> BO. A chain hop joins LED n's
+    output to LED n+1's input on the same path."""
+
+    PRIMARY = "DO->DI"
+    BACKUP = "BO->BI"
+
+
 class WS2816C(Component):
     """Worldsemi WS2816C-2121 addressable RGB LED with backup data path."""
 
     manufacturer = "Worldsemi"
     mpn = "WS2816C-2121"
-    lcsc: ClassVar[str] = "C965561"
+    lcsc = LCSCPart("C965561")  # read by the JLCPCB exporter (jitxlib.jlcpcb)
     datasheet = (
         "https://datasheet.lcsc.com/datasheet/pdf/"
         "0a49b02030eefff1ce6215b403f19c6e.pdf?productCode=C965561"
@@ -134,6 +144,14 @@ class WS2816C(Component):
                 }
             )
         ]
+
+    def output(self, path: DataPath) -> Port:
+        """Output port of a data path (DO or BO)."""
+        return self.DO if path == DataPath.PRIMARY else self.BO
+
+    def input(self, path: DataPath) -> Port:
+        """Input port of a data path (DI or BI)."""
+        return self.DI if path == DataPath.PRIMARY else self.BI
 
 
 class WS2816CHarness(Circuit):

@@ -2,6 +2,12 @@
  "schema_version": 1,
  "digest_version": 1,
  "chains": {
+  "chain-2": {
+   "digest": "78e0877fced9897dbddba5c080ab36af4fcf283b4d438b2b3a65485b504496aa",
+   "providers": [
+    "jlcpcb"
+   ]
+  },
   "main": {
    "digest": "5df234a962045ef8eff41050d6e76719ef4926a79de4d00d18004ebd2f2142db",
    "providers": [
@@ -10,6 +16,403 @@
   }
  },
  "entries": [
+  {
+   "digest": "3fb5d1ba849d8fc80860a99c775a82ed7240d21d0caeb9a074735127b6e0d7c6",
+   "chain": "chain-2",
+   "lock_scope": "",
+   "query": "capacitor(capacitance=10 microfarad, case=0603, library=basic, rated_voltage_dc=>=10 volt, temperature_coefficient_code=OneOf(X7R, X5R))",
+   "filters": {
+    "capacitance": [
+     "Exactly",
+     [
+      "q",
+      "10 microfarad"
+     ]
+    ],
+    "case": [
+     "Exactly",
+     "0603"
+    ],
+    "library": [
+     "Exactly",
+     "basic"
+    ],
+    "rated_voltage_dc": [
+     "Range",
+     [
+      "q",
+      "10 volt"
+     ],
+     null
+    ],
+    "temperature_coefficient_code": [
+     "OneOf",
+     [
+      "X7R",
+      "X5R"
+     ]
+    ]
+   },
+   "provider": "jlcpcb",
+   "identity": {
+    "mpn": "CL10A106KP8NNNC",
+    "manufacturer": "Samsung Electro-Mechanics",
+    "category": "capacitor",
+    "provider": "jlcpcb",
+    "attributes": {
+     "capacitance": [
+      "q",
+      "10.0 microfarad"
+     ],
+     "case": "0603",
+     "lcsc": "C19702",
+     "library": "basic",
+     "rated_voltage_dc": [
+      "q",
+      "10.0 volt"
+     ],
+     "temperature_coefficient_code": "X5R",
+     "tolerance": 0.1
+    },
+    "provider_ref": "C19702"
+   },
+   "payload": {
+    "v": 1,
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Samsung-Electro-Mechanics-CL10A106KP8NNNC_C19702.pdf",
+    "description": "10V 10uF X5R \u00b110% 0603 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+    "stock": 10331892,
+    "price": 0.0166,
+    "min_order_qty": 1,
+    "min_assembly_qty": 20,
+    "product_url": "https://jlcpcb.com/partdetail/C19702"
+   }
+  },
+  {
+   "digest": "af2282a9a511aa927cf17700a6b129f9396afde16d309a717f62f0e18d4d7f64",
+   "chain": "chain-2",
+   "lock_scope": "",
+   "query": "capacitor(capacitance=100 microfarad, case=1206, library=basic, rated_voltage_dc=>=6.3 volt, temperature_coefficient_code=OneOf(X5R, X7R))",
+   "filters": {
+    "capacitance": [
+     "Exactly",
+     [
+      "q",
+      "100 microfarad"
+     ]
+    ],
+    "case": [
+     "Exactly",
+     "1206"
+    ],
+    "library": [
+     "Exactly",
+     "basic"
+    ],
+    "rated_voltage_dc": [
+     "Range",
+     [
+      "q",
+      "6.3 volt"
+     ],
+     null
+    ],
+    "temperature_coefficient_code": [
+     "OneOf",
+     [
+      "X5R",
+      "X7R"
+     ]
+    ]
+   },
+   "provider": "jlcpcb",
+   "identity": {
+    "mpn": "CL31A107MQHNNNE",
+    "manufacturer": "Samsung Electro-Mechanics",
+    "category": "capacitor",
+    "provider": "jlcpcb",
+    "attributes": {
+     "capacitance": [
+      "q",
+      "100.0 microfarad"
+     ],
+     "case": "1206",
+     "lcsc": "C15008",
+     "library": "basic",
+     "rated_voltage_dc": [
+      "q",
+      "6.3 volt"
+     ],
+     "temperature_coefficient_code": "X5R",
+     "tolerance": 0.2
+    },
+    "provider_ref": "C15008"
+   },
+   "payload": {
+    "v": 1,
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2304140030_Samsung-Electro-Mechanics-CL31A107MQHNNNE_C15008.pdf",
+    "description": "100uF 6.3V X5R \u00b120% 1206 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+    "stock": 1934009,
+    "price": 0.0521,
+    "min_order_qty": 1,
+    "min_assembly_qty": 5,
+    "product_url": "https://jlcpcb.com/partdetail/C15008"
+   }
+  },
+  {
+   "digest": "50e2e7ed2ac985f865a31d206c9e7ab789cad6b3a80cb70ae449613b57240e79",
+   "chain": "chain-2",
+   "lock_scope": "",
+   "query": "resistor(case=0603, library=basic, resistance=10 kiloohm)",
+   "filters": {
+    "case": [
+     "Exactly",
+     "0603"
+    ],
+    "library": [
+     "Exactly",
+     "basic"
+    ],
+    "resistance": [
+     "Exactly",
+     [
+      "q",
+      "10 kiloohm"
+     ]
+    ]
+   },
+   "provider": "jlcpcb",
+   "identity": {
+    "mpn": "0603WAF1002T5E",
+    "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+    "category": "resistor",
+    "provider": "jlcpcb",
+    "attributes": {
+     "case": "0603",
+     "composition": "Thick Film Resistor",
+     "lcsc": "C25804",
+     "library": "basic",
+     "max_power": [
+      "q",
+      "100.0 milliwatt"
+     ],
+     "rated_voltage_dc": [
+      "q",
+      "75.0 volt"
+     ],
+     "resistance": [
+      "q",
+      "10.0 kiloohm"
+     ],
+     "tcr": [
+      "q",
+      "100.0 / megakelvin"
+     ],
+     "tolerance": 0.01
+    },
+    "provider_ref": "C25804"
+   },
+   "payload": {
+    "v": 1,
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010045_UNI-ROYAL-Uniroyal-Elec-0603WAF1002T5E_C25804.pdf",
+    "description": "-55\u2103~+155\u2103 100mW 10k\u03a9 75V Thick Film Resistor \u00b11% \u00b1100ppm/\u2103 0603 Chip Resistor - Surface Mount ROHS",
+    "stock": 29604701,
+    "price": 0.0012,
+    "min_order_qty": 1,
+    "min_assembly_qty": 20,
+    "product_url": "https://jlcpcb.com/partdetail/C25804"
+   }
+  },
+  {
+   "digest": "eff842f605a236f7fb350a2db1d62fbd386714042006ee7219093b1424c8573b",
+   "chain": "chain-2",
+   "lock_scope": "",
+   "query": "resistor(case=0603, library=basic, resistance=20 kiloohm)",
+   "filters": {
+    "case": [
+     "Exactly",
+     "0603"
+    ],
+    "library": [
+     "Exactly",
+     "basic"
+    ],
+    "resistance": [
+     "Exactly",
+     [
+      "q",
+      "20 kiloohm"
+     ]
+    ]
+   },
+   "provider": "jlcpcb",
+   "identity": {
+    "mpn": "0603WAF2002T5E",
+    "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+    "category": "resistor",
+    "provider": "jlcpcb",
+    "attributes": {
+     "case": "0603",
+     "composition": "Thick Film Resistor",
+     "lcsc": "C4184",
+     "library": "basic",
+     "max_power": [
+      "q",
+      "100.0 milliwatt"
+     ],
+     "rated_voltage_dc": [
+      "q",
+      "75.0 volt"
+     ],
+     "resistance": [
+      "q",
+      "20.0 kiloohm"
+     ],
+     "tcr": [
+      "q",
+      "100.0 / megakelvin"
+     ],
+     "tolerance": 0.01
+    },
+    "provider_ref": "C4184"
+   },
+   "payload": {
+    "v": 1,
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010230_UNI-ROYAL-Uniroyal-Elec-0603WAF2002T5E_C4184.pdf",
+    "description": "-55\u2103~+155\u2103 100mW 20k\u03a9 75V Thick Film Resistor \u00b11% \u00b1100ppm/\u2103 0603 Chip Resistor - Surface Mount ROHS",
+    "stock": 7997425,
+    "price": 0.0012,
+    "min_order_qty": 1,
+    "min_assembly_qty": 20,
+    "product_url": "https://jlcpcb.com/partdetail/C4184"
+   }
+  },
+  {
+   "digest": "b1ec2cf049a0d286cf345752f936f2e7978ef3d59da25456698628ab6b29e10d",
+   "chain": "chain-2",
+   "lock_scope": "",
+   "query": "resistor(case=0603, library=basic, resistance=33 ohm)",
+   "filters": {
+    "case": [
+     "Exactly",
+     "0603"
+    ],
+    "library": [
+     "Exactly",
+     "basic"
+    ],
+    "resistance": [
+     "Exactly",
+     [
+      "q",
+      "33 ohm"
+     ]
+    ]
+   },
+   "provider": "jlcpcb",
+   "identity": {
+    "mpn": "0603WAF330JT5E",
+    "manufacturer": "UNI-ROYAL(Uniroyal Elec)",
+    "category": "resistor",
+    "provider": "jlcpcb",
+    "attributes": {
+     "case": "0603",
+     "composition": "Thick Film Resistor",
+     "lcsc": "C23140",
+     "library": "basic",
+     "max_power": [
+      "q",
+      "100.0 milliwatt"
+     ],
+     "rated_voltage_dc": [
+      "q",
+      "75.0 volt"
+     ],
+     "resistance": [
+      "q",
+      "33.0 ohm"
+     ],
+     "tcr": [
+      "q",
+      "100.0 / megakelvin"
+     ],
+     "tolerance": 0.01
+    },
+    "provider_ref": "C23140"
+   },
+   "payload": {
+    "v": 1,
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2206010116_UNI-ROYAL-Uniroyal-Elec-0603WAF330JT5E_C23140.pdf",
+    "description": "-55\u2103~+155\u2103 100mW 33\u03a9 75V Thick Film Resistor \u00b11% \u00b1100ppm/\u2103 0603 Chip Resistor - Surface Mount ROHS",
+    "stock": 5604113,
+    "price": 0.0013,
+    "min_order_qty": 1,
+    "min_assembly_qty": 20,
+    "product_url": "https://jlcpcb.com/partdetail/C23140"
+   }
+  },
+  {
+   "digest": "4fa0095e6e990fe9565e210852a62aadf8dd5f0c5cb6161b86f534f4e24e7b1e",
+   "chain": "chain-2",
+   "lock_scope": "",
+   "query": "capacitor(capacitance=100 nanofarad, case=0603, library=basic, temperature_coefficient_code=OneOf(X7R, X5R))",
+   "filters": {
+    "capacitance": [
+     "Exactly",
+     [
+      "q",
+      "100 nanofarad"
+     ]
+    ],
+    "case": [
+     "Exactly",
+     "0603"
+    ],
+    "library": [
+     "Exactly",
+     "basic"
+    ],
+    "temperature_coefficient_code": [
+     "OneOf",
+     [
+      "X7R",
+      "X5R"
+     ]
+    ]
+   },
+   "provider": "jlcpcb",
+   "identity": {
+    "mpn": "CC0603KRX7R9BB104",
+    "manufacturer": "YAGEO",
+    "category": "capacitor",
+    "provider": "jlcpcb",
+    "attributes": {
+     "capacitance": [
+      "q",
+      "100.0 nanofarad"
+     ],
+     "case": "0603",
+     "lcsc": "C14663",
+     "library": "basic",
+     "rated_voltage_dc": [
+      "q",
+      "50.0 volt"
+     ],
+     "temperature_coefficient_code": "X7R",
+     "tolerance": 0.1
+    },
+    "provider_ref": "C14663"
+   },
+   "payload": {
+    "v": 1,
+    "datasheet": "https://www.lcsc.com/datasheet/lcsc_datasheet_2211101700_YAGEO-CC0603KRX7R9BB104_C14663.pdf",
+    "description": "100nF 50V X7R \u00b110% 0603 Multilayer Ceramic Capacitors MLCC - SMD/SMT ROHS",
+    "stock": 57246942,
+    "price": 0.0051,
+    "min_order_qty": 1,
+    "min_assembly_qty": 20,
+    "product_url": "https://jlcpcb.com/partdetail/C14663"
+   }
+  },
   {
    "digest": "21ab73542cf2e6e3239a97ddc1527021e48f48e4823f242203029ce6e83fb9c1",
    "chain": "main",

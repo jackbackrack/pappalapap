@@ -18,9 +18,15 @@ Channel evidence: LCSC C83333, "SMBJ5.0A (Littelfuse)", DO-214AA.
 Ports: K (cathode, band end) on pad 1 at +y, marked with the silkscreen dot;
 A (anode) on pad 2 at -y. Landpattern: the jitxlib molded two-pin IPC generator
 via ``Pad1MoldedTwoPin`` (molded_diode.py), which marks pad 1.
-"""
 
-from typing import ClassVar
+Courtyard: ``COURTYARD_EXCESS`` (1.0 mm) around pads and body, set
+explicitly. The molded generator has no lead profile to read, so its
+default falls back to the generic per-density-level excess, 2.0 mm at the
+level A used here for the pad sizes (a 7.9 x 11.4 mm courtyard for a
+5.6 x 3.9 mm part). 1.0 mm is what the same generator gives at level B, as
+on the SS54 and the fuse; IPC-7351B's own lead-fillet table puts this lead
+type at 0.5 (A) / 0.25 (B).
+"""
 
 from jitx.circuit import Circuit
 from jitx.component import Component
@@ -28,6 +34,8 @@ from jitx.landpattern import PadMapping
 from jitx.net import Port
 from jitx.sample import SampleDesign
 from jitx.toleranced import Toleranced
+from jitxlib.jlcpcb import LCSCPart
+from jitxlib.landpatterns.courtyard import ExcessCourtyardGenerator
 from jitxlib.landpatterns.ipc import DensityLevel
 from jitxlib.landpatterns.leads import SMDLead
 from jitxlib.landpatterns.package import RectanglePackage
@@ -36,13 +44,16 @@ from jitxlib.symbols.diode import TVSDiodeSymbol
 
 from pappalapap.components.molded_diode import Pad1MoldedTwoPin
 
+COURTYARD_EXCESS = 1.0
+"""Courtyard around pads and body (mm); see the module docstring."""
+
 
 class SMBJ5V0A(Component):
     """5.0 V standoff unidirectional TVS (A anode, K cathode)."""
 
     manufacturer = "Littelfuse"
     mpn = "SMBJ5.0A"
-    lcsc: ClassVar[str] = "C83333"
+    lcsc = LCSCPart("C83333")  # read by the JLCPCB exporter (jitxlib.jlcpcb)
     datasheet = (
         "https://datasheet.lcsc.com/datasheet/pdf/"
         "4ab84a227fae39f9eac85241b8264ead.pdf?productCode=C83333"
@@ -74,6 +85,7 @@ class SMBJ5V0A(Component):
         # 2.22 x 2.23 with a 2.72 gap (J >= 2.16 and K <= 2.74 met, I >= 2.26
         # short by 0.04 mm).
         .density_level(DensityLevel.A)
+        .courtyard(ExcessCourtyardGenerator(COURTYARD_EXCESS))
     )
     symbol = TVSDiodeSymbol()
 

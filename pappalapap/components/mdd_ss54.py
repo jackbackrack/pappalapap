@@ -21,14 +21,13 @@ A (anode) on pad 2 at -y. Landpattern: the jitxlib molded two-pin IPC generator
 via ``Pad1MoldedTwoPin`` (molded_diode.py), which marks pad 1.
 """
 
-from typing import ClassVar
-
 from jitx.circuit import Circuit
 from jitx.component import Component
 from jitx.landpattern import PadMapping
 from jitx.net import Port
 from jitx.sample import SampleDesign
 from jitx.toleranced import Toleranced
+from jitxlib.jlcpcb import LCSCPart
 from jitxlib.landpatterns.ipc import DensityLevel
 from jitxlib.landpatterns.leads import SMDLead
 from jitxlib.landpatterns.package import RectanglePackage
@@ -43,7 +42,7 @@ class SS54(Component):
 
     manufacturer = "MDD (Microdiode Semiconductor)"
     mpn = "SS54"
-    lcsc: ClassVar[str] = "C22452"
+    lcsc = LCSCPart("C22452")  # read by the JLCPCB exporter (jitxlib.jlcpcb)
     datasheet = (
         "https://datasheet.lcsc.com/datasheet/pdf/"
         "3d29bdcdc3c46ec127d6db22edd72e83.pdf?productCode=C22452"

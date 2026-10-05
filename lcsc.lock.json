@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "parts": {
+    "C14663": {"orientation": 270.0},
+    "C15008": {"orientation": 270.0},
+    "C16072": {"orientation": 270.0},
+    "C178982": {"orientation": 270.0},
+    "C19702": {"orientation": 270.0},
+    "C22452": {"orientation": 90.0},
+    "C23140": {"orientation": 270.0},
+    "C25804": {"orientation": 270.0},
+    "C4184": {"orientation": 270.0},
+    "C439782": {"orientation": 270.0},
+    "C481251": {"orientation": 0.0},
+    "C83333": {"orientation": 270.0},
+    "C842287": {"orientation": 270.0},
+    "C965561": {"orientation": 0.0}
+  }
+}

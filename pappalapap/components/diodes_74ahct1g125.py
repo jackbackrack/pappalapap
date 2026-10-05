@@ -20,14 +20,13 @@ Not modelled (no JITX field): VCC 4.5-5.5 V; TTL-level inputs (VIH 2.0 V), so
 a 3.3 V MCU output drives it directly; +/-8 mA output drive at 5 V.
 """
 
-from typing import ClassVar
-
 from jitx.circuit import Circuit
 from jitx.component import Component
 from jitx.landpattern import PadMapping
 from jitx.net import Port
 from jitx.sample import SampleDesign
 from jitx.toleranced import Toleranced
+from jitxlib.jlcpcb import LCSCPart
 from jitxlib.landpatterns.generators.sot import SOT23_5, SOTLead, SOTLeadProfile
 from jitxlib.landpatterns.ipc import DensityLevel
 from jitxlib.landpatterns.package import RectanglePackage
@@ -39,7 +38,7 @@ class AHCT1G125(Component):
 
     manufacturer = "Diodes Incorporated"
     mpn = "74AHCT1G125W5-7"
-    lcsc: ClassVar[str] = "C842287"
+    lcsc = LCSCPart("C842287")  # read by the JLCPCB exporter (jitxlib.jlcpcb)
     datasheet = (
         "https://datasheet.lcsc.com/datasheet/pdf/"
         "9555fe94df3a7068be57bf68a997ca90.pdf?productCode=C842287"

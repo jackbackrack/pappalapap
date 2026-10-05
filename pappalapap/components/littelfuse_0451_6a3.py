@@ -28,13 +28,12 @@ chip-termination protrusion (``BigRectangularLeads``: the end caps wrap the
 body ends like a chip part). Unpolarized; pads ``p[1]`` (+y), ``p[2]`` (-y).
 """
 
-from typing import ClassVar
-
 from jitx.circuit import Circuit
 from jitx.component import Component
 from jitx.net import Port
 from jitx.sample import SampleDesign
 from jitx.toleranced import Toleranced
+from jitxlib.jlcpcb import LCSCPart
 from jitxlib.landpatterns.ipc import DensityLevel
 from jitxlib.landpatterns.leads import SMDLead
 from jitxlib.landpatterns.leads.protrusions import BigRectangularLeads
@@ -48,7 +47,7 @@ class Fuse451_6A3(Component):
 
     manufacturer = "Littelfuse"
     mpn = "045106.3MRL"
-    lcsc: ClassVar[str] = "C178982"
+    lcsc = LCSCPart("C178982")  # read by the JLCPCB exporter (jitxlib.jlcpcb)
     datasheet = (
         "https://datasheet.lcsc.com/datasheet/pdf/"
         "ecd74ee295e2e3d7ddb74e9193c5d222.pdf?productCode=C178982"

@@ -35,6 +35,7 @@ from jitx.net import Port
 from jitx.sample import SampleDesign
 from jitx.shapes.composites import rectangle
 from jitx.shapes.primitive import Circle, Polyline
+from jitxlib.jlcpcb import LCSCPart
 from jitxlib.landpatterns.pads import THPad, compute_pad_diameter
 from jitxlib.symbols.box import BoxSymbol, PinGroup, Row
 
@@ -94,7 +95,7 @@ class KF301_2P(Component):
 
     manufacturer = "Cixi Kefa Elec"
     mpn = "KF301-5.0-2P"
-    lcsc: ClassVar[str] = "C474881"
+    lcsc = LCSCPart("C474881")  # read by the JLCPCB exporter (jitxlib.jlcpcb)
     datasheet = (
         "https://datasheet.lcsc.com/datasheet/pdf/"
         "dbe48a1bef5e997cc12dba31bc0ac67e.pdf?productCode=C474881"

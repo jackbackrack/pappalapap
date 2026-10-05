@@ -85,6 +85,7 @@ from jitx.net import Port
 from jitx.sample import SampleDesign
 from jitx.shapes.composites import rectangle
 from jitx.shapes.primitive import Circle, Polyline
+from jitxlib.jlcpcb import LCSCPart
 from jitxlib.landpatterns.pads import THPad, compute_pad_diameter
 from jitxlib.symbols.box import BoxSymbol, Column, PinGroup, Row
 
@@ -180,7 +181,7 @@ class XiaoESP32S3Socket(Component):
 
     manufacturer = "HCTL"
     mpn = "PM254-1-07-Z-8.5"
-    lcsc: ClassVar[str] = "C2897370"
+    lcsc = LCSCPart("C2897370")  # read by the JLCPCB exporter (jitxlib.jlcpcb)
     socket_qty: ClassVar[int] = 2
     module: ClassVar[str] = (
         "Seeed Studio XIAO ESP32S3 Sense (bought separately, plugs in)"

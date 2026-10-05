@@ -201,8 +201,8 @@ class JLCFlex2L(Substrate):
 
 # --- Build harness -----------------------------------------------------------
 
-STRIP_LENGTH = 490.0
-STRIP_HEIGHT = 50.0  # 5 rows x 10 mm pitch (see circuits.led_strip)
+STRIP_LENGTH = 490.0  # JLC regular FPC maximum: exercises the max-dimension rule
+STRIP_HEIGHT = 50.0  # any strip-like height (the real strip: circuits.led_strip)
 EDGE_KEEPOUT = JLCFlexRules.min_copper_edge_space
 
 

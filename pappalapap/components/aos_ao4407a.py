@@ -28,14 +28,13 @@ Not modelled (no JITX field): the ratings above; VGS(th) -1.7 to -3 V
 is inside the +/-25 V rating.
 """
 
-from typing import ClassVar
-
 from jitx.circuit import Circuit
 from jitx.component import Component
 from jitx.landpattern import PadMapping
 from jitx.net import Port
 from jitx.sample import SampleDesign
 from jitx.toleranced import Toleranced
+from jitxlib.jlcpcb import LCSCPart
 from jitxlib.landpatterns.generators.soic import SOIC
 from jitxlib.landpatterns.ipc import DensityLevel
 from jitxlib.landpatterns.leads import LeadProfile, SMDLead
@@ -49,7 +48,7 @@ class AO4407A(Component):
 
     manufacturer = "Alpha & Omega Semiconductor"
     mpn = "AO4407A"
-    lcsc: ClassVar[str] = "C16072"
+    lcsc = LCSCPart("C16072")  # read by the JLCPCB exporter (jitxlib.jlcpcb)
     datasheet = "https://www.aosmd.com/sites/default/files/res/datasheets/AO4407A.pdf"
     reference_designator_prefix = "Q"
 

@@ -28,11 +28,30 @@ Power path (ARCHITECTURE.md "Power Tree"; PLAN.md "Board 2 (revised)"):
   relative to D/S, the channel stays off and the body diode blocks. The input
   is 5 V nominal, so |VGS| <= 5.5 V stays far inside the AO4407A's +/-25 V
   rating (datasheet "Absolute Maximum Ratings"); no gate zener is needed.
-- On VLED: SMBJ5.0A TVS (K to VLED, A to GND), 1000 uF bulk, and a 10 uF +
-  100 nF ceramic pair at the ZIF's VLED contacts.
+- On VLED: SMBJ5.0A TVS (K to VLED, A to GND), bulk storage (``BulkCan`` or
+  ``MlccBank``, the board's choice, see below), and a 10 uF + 100 nF ceramic
+  pair at the ZIF's VLED contacts.
 - XIAO supply: VLED -> SS54 Schottky (A at VLED, K at the XIAO "5V"/VBUS pin),
   so a USB cable on the XIAO cannot back-feed VLED (and the LED supply feeds
   the XIAO when no USB is attached).
+
+Bulk storage on VLED (``XiaoInterface``'s ``bulk`` argument):
+
+- ``BulkCan``: one 1000 uF 16 V radial electrolytic (``CX1000uF16V``,
+  D10 x 13, 14.5 mm tall max). The flat ``InterfaceBoard`` keeps it.
+- ``MlccBank`` (column board, user decision 2026-10-05): ``count`` (4) x
+  100 uF 6.3 V X5R 1206 MLCCs (``BULK_MLCC``), resolved through the project
+  parts chain (JLCPCBParts, basic library). On 2026-10-05 it resolved to
+  Samsung CL31A107MQHNNNE, LCSC C15008, JLCPCB basic, ~1.3-1.9 M in stock;
+  thickness code Q = 1.6 +/- 0.2 mm, so <= 1.8 mm tall. Nominal 400 uF, but
+  a 6.3 V X5R part on the 5 V rail loses most of it to DC bias: about
+  25-30 uF effective each, so ~100-120 uF effective for the bank, at a few
+  milliohm ESR each (vs ~100 mOhm for the can). That is enough: VLED comes
+  from a regulated supply over short 18 AWG wire, the WS2816C's PWM edges
+  want low ESR/ESL near the ZIF more than bulk microfarads, and the 10 uF at
+  the ZIF still sits next to the contacts. The 6.3 V rating covers the
+  SMBJ5.0A-clamped rail in normal use (5.0 V standoff); a surge the TVS
+  clamps above 6.3 V is brief.
 
 ZIF pinout (approved 2026-10-03, same as ``FpcTail16``): contacts 1-7 VLED,
 8 DRET, 9 DIN, 10-16 GND (``ZIF_PINOUT``); the fixing tabs (MNT) to GND.
@@ -47,12 +66,15 @@ OE_n tied to GND, VCC = VLED with 100 nF.
 DRET: ZIF contact 8 -> 10 kOhm -> XIAO D1 (GPIO2), 20 kOhm from D1 to GND:
 5 V x 20 / 30 = 3.33 V at the GPIO.
 
-Passives are ``jitxlib.parts`` queries (value only here); the designs set the
-JLC Basic / 0603 defaults and the project chain (``pyproject.toml``
-``[tool.jitx.parts]``) resolves them against ``parts/jlc-basic-passives.csv``.
+Passives are ``jitxlib.parts`` queries (value only here, except the
+self-contained ``BULK_MLCC``); the designs set the JLC basic / 0603 defaults
+and the project chain (``pyproject.toml`` ``[tool.jitx.parts]``, provider
+``jitxlib.jlcpcb.parts.JLCPCBParts``) resolves them and attaches each part's
+LCSC number.
 """
 
 from dataclasses import dataclass
+from typing import assert_never
 
 from jitx.board import Board
 from jitx.circuit import Circuit
@@ -78,14 +100,23 @@ from ..components.xiao_esp32s3_smd import XiaoESP32S3SMD
 from ..substrate_rigid import JLC2L16
 from .led_strip import GroundTag, PowerTag
 
-JLC_BASIC_RESISTOR = ResistorQuery(case="0603").update(jlc_class="basic")
-"""Design-level resistor default: 0603, JLCPCB Basic (``jlc_class`` column of
-``parts/jlc-basic-passives.csv``)."""
+JLC_BASIC_RESISTOR = ResistorQuery(case="0603").update(library="basic")
+"""Design-level resistor default: 0603 from the JLCPCB basic library (the
+``library`` filter served by jitxlib.jlcpcb's JLCPCBParts provider)."""
+
+BULK_MLCC = CapacitorQuery(
+    capacitance=100 * uF,
+    case="1206",
+    rated_voltage_dc=AtLeast(6.3 * V),
+    temperature_coefficient_code=("X5R", "X7R"),
+).update(library="basic")
+"""One capacitor of the ``MlccBank``: 100 uF >= 6.3 V X5R/X7R 1206, JLCPCB
+basic (resolved 2026-10-05 to CL31A107MQHNNNE, LCSC C15008)."""
 
 JLC_BASIC_CAPACITOR = CapacitorQuery(
     case="0603", temperature_coefficient_code=("X7R", "X5R")
-).update(jlc_class="basic")
-"""Design-level capacitor default: 0603 X7R/X5R ceramic, JLCPCB Basic."""
+).update(library="basic")
+"""Design-level capacitor default: 0603 X7R/X5R ceramic, JLCPCB basic library."""
 
 
 @dataclass(frozen=True)
@@ -112,6 +143,24 @@ assert sorted(ZIF_PINOUT.contacts()) == list(range(1, XFCN_F1002B16.NUM_PINS + 1
 
 
 @dataclass(frozen=True)
+class BulkCan:
+    """Bulk storage: one 1000 uF 16 V radial can (``CX1000uF16V``)."""
+
+    count = 1
+
+
+@dataclass(frozen=True)
+class MlccBank:
+    """Bulk storage: ``count`` x ``BULK_MLCC`` (100 uF 1206) in parallel."""
+
+    count: int = 4
+
+
+BulkStorage = BulkCan | MlccBank
+"""VLED bulk capacitance choice; see the module docstring."""
+
+
+@dataclass(frozen=True)
 class At:
     """One part's placement in the circuit frame (mm, degrees)."""
 
@@ -134,7 +183,9 @@ class InterfacePlacement:
     fet: At | None = None
     gate_r: At | None = None
     tvs: At | None = None
-    bulk: At | None = None
+    bulk: tuple[At | None, ...] = ()
+    """One entry per bulk capacitor, in ``XiaoInterface.bulk`` order (empty:
+    all floating)."""
     schottky: At | None = None
     xiao: At | None = None
     zif: At | None = None
@@ -183,15 +234,26 @@ class XiaoInterface(Circuit):
         self,
         xiao: XiaoPart,
         power_input: PowerInputPart,
+        bulk: BulkStorage,
         placement: InterfacePlacement,
     ) -> None:
         at = placement
+        bulk_at = at.bulk or (None,) * bulk.count
+        assert len(bulk_at) == bulk.count, "one bulk placement per capacitor"
         # --- Parts and placement (orientation notes live with each design) ----
         self.power_in = placed(power_input(), at.power_input)
         self.fuse = placed(Fuse451_6A3(), at.fuse)
         self.fet = placed(AO4407A(), at.fet)
         self.tvs = placed(SMBJ5V0A(), at.tvs)
-        self.bulk = placed(CX1000uF16V(), at.bulk)
+        # Bulk storage: a structural list, VLED on each part's first terminal.
+        self.bulk: list[CX1000uF16V] | list[Capacitor]
+        match bulk:
+            case BulkCan():
+                self.bulk = [placed(CX1000uF16V(), a) for a in bulk_at]
+            case MlccBank():
+                self.bulk = [placed(Capacitor(BULK_MLCC), a) for a in bulk_at]
+            case _:
+                assert_never(bulk)
         self.schottky = placed(SS54(), at.schottky)
         self.xiao = placed(xiao(), at.xiao)
         self.zif = placed(XFCN_F1002B16(), at.zif)
@@ -217,7 +279,7 @@ class XiaoInterface(Circuit):
                 self.vled,
                 self.fet.S,
                 self.tvs.K,
-                self.bulk.pos,
+                *self.bulk_vled(),
                 self.schottky.A,
                 self.buffer.VCC,
                 *self.zif_vled(),
@@ -229,7 +291,7 @@ class XiaoInterface(Circuit):
                 self.gnd,
                 self.input_minus(),
                 self.tvs.A,
-                self.bulk.neg,
+                *self.bulk_gnd(),
                 self.xiao.GND,
                 self.buffer.GND,
                 self.buffer.OE_n,
@@ -287,6 +349,14 @@ class XiaoInterface(Circuit):
             return self.power_in.P2
         return self.power_in.GND
 
+    def bulk_vled(self) -> list[Port]:
+        """Each bulk capacitor's VLED terminal (can +, MLCC p1)."""
+        return [c.pos if isinstance(c, CX1000uF16V) else c.p1 for c in self.bulk]
+
+    def bulk_gnd(self) -> list[Port]:
+        """Each bulk capacitor's GND terminal (can -, MLCC p2)."""
+        return [c.neg if isinstance(c, CX1000uF16V) else c.p2 for c in self.bulk]
+
     def zif_vled(self) -> list[Port]:
         """ZIF contacts 1-7."""
         return [self.zif.P[k - 1] for k in ZIF_PINOUT.vled]
@@ -317,9 +387,10 @@ class InterfaceTestBoard(Board):
 class TestDesign(Design):
     """Circuit build harness: ``jitx build pappalapap.circuits.interface.TestDesign``.
 
-    Bare square, parts floating, both XIAO / input variants' electrical
-    content is the same; this builds the column board's (SMD XIAO, wire pads).
-    No pours or rules (those are the board designs' job).
+        Bare square, parts floating, both XIAO / input variants' electrical
+        content is the same; this builds the column board's (SMD XIAO, wire pads,
+    MLCC bank).
+        No pours or rules (those are the board designs' job).
     """
 
     resistor_defaults = JLC_BASIC_RESISTOR
@@ -327,5 +398,7 @@ class TestDesign(Design):
 
     def __init__(self) -> None:
         self.substrate = JLC2L16()
-        self.circuit = XiaoInterface(XiaoESP32S3SMD, WirePads, InterfacePlacement())
+        self.circuit = XiaoInterface(
+            XiaoESP32S3SMD, WirePads, MlccBank(), InterfacePlacement()
+        )
         self.board = InterfaceTestBoard()

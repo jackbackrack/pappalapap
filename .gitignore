@@ -27,3 +27,4 @@ design-report-*.json
 design-report-*.txt
 layout/*-input.json
 mechanical/out/
+jlcpcb/
