@@ -129,7 +129,7 @@ from ..components.splice_pads import SplicePads
 from ..components.worldsemi_ws2816c import PAD_OUTER_X, WS2816C
 from ..substrate import JLCFlex2L, JLCFlexRules
 from ..variants import TWO_SEGMENT, StripVariant
-from .layout_placements import layout_placements
+from jitx_design_tools.layout_placements import layout_placements
 
 # --- Design parameters ---------------------------------------------------------
 

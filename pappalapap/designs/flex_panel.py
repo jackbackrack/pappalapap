@@ -100,7 +100,7 @@ from .flex_strip import (
     box,
     union,
 )
-from .layout_placements import layout_placements
+from jitx_design_tools.layout_placements import layout_placements
 
 # --- JLCPCB flex assembly panel rule ----------------------------------------------
 PANEL_LONG = 240.0

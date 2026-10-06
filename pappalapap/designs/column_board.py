@@ -156,7 +156,7 @@ from .interface_board import (
     pad_footprints,
     two_pin_pad_footprints,
 )
-from .layout_placements import layout_placements
+from jitx_design_tools.layout_placements import layout_placements
 
 # --- Outline ------------------------------------------------------------------------
 

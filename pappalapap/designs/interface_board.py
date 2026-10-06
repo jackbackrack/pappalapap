@@ -94,7 +94,7 @@ from ..components.littelfuse_0451_6a3 import Fuse451_6A3
 from ..components.xfcn_f1002b16 import XFCN_F1002B16
 from ..components.xiao_esp32s3 import USB_MAX_X, XiaoESP32S3Socket
 from ..substrate_rigid import JLC2L16, JLC2LRules
-from .layout_placements import layout_placements
+from jitx_design_tools.layout_placements import layout_placements
 
 # --- Board frame and placement (mm) -------------------------------------------------
 

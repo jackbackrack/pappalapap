@@ -16,8 +16,12 @@ dependencies = [
   "jitxlib-parts>=2.0.0a6,<3",
   "jitxlib-jlcpcb>=4.0.0a4,<5",
   "jitxlib-gerber>=0.0.3.dev1",
+  "jitx-design-tools @ file:///Users/jrb/jitx-design-tools",
 ]
 requires-python = ">=3.12"
+
+[tool.hatch.metadata]
+allow-direct-references = true
 
 # Passive parts chain (jitxlib-parts 2.x). JLCPCB Basic parts only, verified
 # against the LCSC/JLCPCB catalogue with parts2jitx-lcsc on 2026-10-03.
